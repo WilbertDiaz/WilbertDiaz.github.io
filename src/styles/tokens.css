@@ -1,0 +1,108 @@
+/* Talla y superficie — tokens. Única fuente de color: la paleta del proyecto.
+   Ratios medidos contra --c-fondo (#0a0908) salvo indicación. */
+:root {
+  /* Paleta base (no se toca) */
+  --p-0: #0a0908; --p-1: #0f0d0c; --p-2: #141110; --p-3: #1a1716;  --p-ink: #faf8f4; --p-body: #e2dacf; --p-muted: #9b8f82; --p-line: #4f453a;
+  --p-oro: #ecbf87; --p-oro-hover: #f4d3a5; --p-oro-hondo: #9f7948;
+  --p-hilo: #d93b78; /* el cordón rosa de la jícara: solo foco */
+
+  /* Derivados (mezcla de la paleta base) */
+  --p-surco: #6b5d4f;           /* line → muted, 3.13:1: talla decorativa */
+
+  /* Roles: fondo y superficie (dulce) */
+  --c-fondo: var(--p-0);
+  --c-fondo-2: var(--p-1);
+  /* Un escalón de tono por nivel, como en el tema claro: el bloque se separa del fondo por el corte, no por contraste */
+  --c-superficie-baja: var(--p-1);   /* marco de captura */
+  --c-superficie: var(--p-2);        /* bloque de dulce */
+  --c-superficie-alta: var(--p-3);   /* bloque apilado encima */
+
+  /* Roles: texto */
+  --c-texto: var(--p-body);     /* 14.37 */
+  --c-titulo: var(--p-ink);     /* 18.76 */
+  --c-texto-suave: var(--p-muted); /* 6.30 · 4.92 sobre cacao */
+
+  /* Roles: talla (jícara) — tallar es quitar piel y revelar el tono claro */
+  --c-talla: var(--p-oro-hondo);   /* 5.02 · trazo grabado visible, bordes de control */
+  --c-talla-surco: var(--p-surco); /* 3.13 · bandas, rayado, nunca texto */
+  --c-filete: var(--p-line);       /* 2.13 · filetes de separación, nunca control */
+
+  /* Roles: acción */
+  --c-accion: var(--p-oro);           /* 11.72 · texto --c-fondo sobre él: 11.72 */
+  --c-accion-hover: var(--p-oro-hover);
+  --c-accion-texto: var(--p-0);
+  --c-foco: var(--p-hilo);            /* 4.59 sobre fondo · 4.11 sobre superficie */
+
+  /* Tipografía — Young Serif (display) + Hanken Grotesk (texto), ambas OFL */
+  --f-display: "Young Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --f-texto: "Hanken Grotesk", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --t-etiqueta: 0.75rem;                                  /* 12 · mayúsculas, tracking .14em */
+  --t-chico: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem); /* 14–15 */
+  --t-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);       /* 16–18 */
+  --t-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);   /* 18–22 */
+  --t-h2: clamp(1.875rem, 1.5rem + 1.8vw, 3rem);          /* 30–48 */
+  --t-h1: clamp(2.5rem, 1.7rem + 4vw, 5.25rem);           /* 40–84 */
+  --lh-display: 1.04; --lh-titulo: 1.15; --lh-texto: 1.6;
+  --tr-etiqueta: 0.14em; --tr-display: -0.015em;
+  --medida: 62ch;
+
+  /* Espaciado (base 4) */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+  --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;  --s-margen: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --ancho: 76rem;
+
+  /* Radios: el dulce se corta, no se redondea */
+--r-1: 2px;--r-pill: 999px;
+
+  /* Elevación: un bloque se apila sobre otro (sombra corta, sin blur grande) */
+  --e-captura: 0 24px 48px -28px rgb(0 0 0 / 0.8);
+
+  /* Bordes tallados */
+  --b-filete: 1px solid var(--c-filete);
+  --b-control: 1px solid var(--c-talla);
+  --foco-anillo: 0 0 0 2px var(--c-fondo), 0 0 0 4px var(--c-foco);
+
+  /* Materiales (rutas) */
+  --m-dulce: url("/identity/dulce.svg");   /* solo tema claro */
+  --m-rayado: url("/identity/rayado.svg");
+
+  /* Movimiento */
+  --d-micro: 140ms; --d-corto: 240ms; --d-medio: 480ms; --d-largo: 720ms; --d-talla: 900ms;
+  --d-escalon: 90ms;
+  --ease-salida: cubic-bezier(0.22, 0.61, 0.36, 1);   /* revelar */
+  --ease-talla: cubic-bezier(0.65, 0, 0.35, 1);       /* gubia: arranca y frena */
+  --ease-estado: cubic-bezier(0.2, 0, 0, 1);          /* hover/foco */
+  --mov-desplazo: 12px;
+  /* «Mi trabajo» (formato revista): bisel del celular, sombra de los marcos y la curva única */
+  --c-dispositivo: #2a2622;
+  --c-sombra: rgba(0, 0, 0, 0.9);
+  --ease-revista: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Tema claro (paleta secundaria). Mismos roles, mismos mínimos AA.
+   Derivados por mezcla de la paleta base; ratios sobre --c-fondo claro (#faf8f4) · sobre superficie-alta (#e2dacf). */
+[data-tema="claro"] {
+  --c-fondo: #faf8f4;              /* ink como papel */
+  --c-fondo-2: #f2eee7;            /* ink 65 % + body */
+  --c-superficie-baja: #f2eee7;
+  --c-superficie: #ece6de;         /* ink 40 % + body: bloque de dulce */
+  --c-superficie-alta: #e2dacf;    /* body: dulce crema */
+  --c-titulo: #0a0908;             /* 18.76 · 14.37 */
+  --c-texto: #2a2222;              /* 14.66 · 11.23 */
+  --c-texto-suave: #685e57;        /* muted 55 % + cacao · 5.95 · 4.56 */
+  --c-talla: #705639;              /* oro hondo 60 % + cacao · 6.43 · 4.92 */
+  --c-talla-surco: #9b8f82;        /* 2.98 · decorativo, nunca texto */
+  --c-filete: #c9c0b4;             /* body 65 % + muted · 1.69 · nunca control */
+  --c-accion: #2a2222;             /* primario cacao; texto #faf8f4 encima 14.66 */
+  --c-accion-hover: #0a0908;
+  --c-accion-texto: #faf8f4;
+  --c-foco: #ad3563;               /* hilo 75 % + cacao · 5.71 · 4.37 */
+  --c-captura-borde: rgb(10 9 8 / 0.08);
+  --e-captura: 0 24px 48px -30px rgb(42 34 34 / 0.45);
+  --c-dispositivo: #1a1816;
+  --c-sombra: rgba(60, 40, 20, 0.45);
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-micro: 0ms; --d-corto: 0ms; --d-medio: 0ms; --d-largo: 0ms; --d-talla: 0ms; --d-escalon: 0ms; --mov-desplazo: 0px; }
+}

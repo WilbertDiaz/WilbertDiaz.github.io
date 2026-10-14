@@ -1,0 +1,105 @@
+---
+import type { Copy } from '../data/content';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+const active = t.toggleHref === '/es' ? 'en' : 'es';
+---
+<header class="encabezado">
+  <div class="wrap nav">
+    <a class="brand" href="#top">Wilbert Díaz</a>
+    <nav class="navlinks" aria-label="Sections">
+      <a href="#about" data-nav>{t.nav.about}</a>
+      <a href="#work" data-nav>{t.nav.work}</a>
+      <a href="#skills" data-nav>{t.nav.skills}</a>
+      <a href="#contact" data-nav>{t.nav.contact}</a>
+      <button type="button" class="tema-btn" data-tema-toggle aria-label="Cambiar a modo claro">
+        <svg class="ico-tema" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="ico-mitad-luna" d="M12 5.2a6.8 6.8 0 1 0 0 13.6a4.9 4.9 0 0 1 0-13.6z" />
+          <g class="ico-mitad-sol">
+            <path d="M12 8a4 4 0 0 1 0 8z" fill="currentColor" stroke="none" />
+            <path d="M18.4 12h2.4M16.6 7.4l1.7-1.7M16.6 16.6l1.7 1.7M14.5 4.6l.9-2M14.5 19.4l.9 2" />
+          </g>
+          <path class="ico-division" d="M12 2.6v18.8" stroke-width="1" />
+        </svg>
+      </button>
+      <div class="idioma" data-activo={active}>
+        <a href="/" lang="en" aria-label="English" aria-current={active === 'en' ? 'true' : undefined}>EN</a>
+        <a href="/es" lang="es" aria-label="Español" aria-current={active === 'es' ? 'true' : undefined}>ES</a>
+      </div>
+      <button type="button" class="burger" data-burger aria-expanded="false" aria-controls="menu-movil" aria-label={t.toggleHref === '/es' ? 'Open menu' : 'Abrir menú'}>
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+    </nav>
+  </div>
+  <nav class="menu-movil" id="menu-movil" aria-label={t.toggleHref === '/es' ? 'Menu' : 'Menú'} inert>
+    <ul>
+      <li style="--k:0"><a href="#about" data-nav>{t.nav.about}</a></li>
+      <li style="--k:1"><a href="#work" data-nav>{t.nav.work}</a></li>
+      <li style="--k:2"><a href="#skills" data-nav>{t.nav.skills}</a></li>
+      <li style="--k:3"><a href="#contact" data-nav>{t.nav.contact}</a></li>
+    </ul>
+  </nav>
+  <script>
+    import '../scripts/idioma.js';
+    const b=document.querySelector('[data-tema-toggle]'),d=document.documentElement;
+    const L={es:['Cambiar a modo claro','Cambiar a modo oscuro'],en:['Switch to light mode','Switch to dark mode']}[d.lang?.slice(0,2)==='en'?'en':'es'];
+    const sync=()=>b.setAttribute('aria-label',d.dataset.tema==='claro'?L[1]:L[0]);
+    b.addEventListener('click',()=>{d.dataset.tema=d.dataset.tema==='claro'?'oscuro':'claro';localStorage.setItem('tema',d.dataset.tema);sync();});
+    sync();
+    // El nombre aparece solo después de pasar la primera sección
+    const hero = document.querySelector('.hero');
+    const enc = document.querySelector('.encabezado');
+    if (hero && enc) {
+      // El enlace de la sección en pantalla queda marcado
+      const enlaces = [...document.querySelectorAll<HTMLAnchorElement>('.navlinks > a[data-nav]')];
+      const marcarSeccion = () => {
+        const linea = innerHeight * 0.45;
+        let activo: HTMLAnchorElement | null = null;
+        for (const a of enlaces) {
+          const el = document.querySelector(a.hash);
+          if (!el) continue;
+          const caja = (el.closest('.parada') ?? el).getBoundingClientRect();
+          if (caja.top <= linea && caja.bottom > linea) activo = a;
+        }
+        // Al final de la página manda el último enlace (Contacto), que ya no ocupa una pantalla entera
+        if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) activo = enlaces[enlaces.length - 1] ?? activo;
+        const hash = activo?.hash ?? null;
+        document.querySelectorAll<HTMLAnchorElement>('a[data-nav]').forEach((a) => (a.hash === hash ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current')));
+      };
+      const revisar = () => {
+        enc.classList.toggle('con-nombre', hero.getBoundingClientRect().bottom <= enc.offsetHeight + 1);
+        marcarSeccion();
+      };
+      addEventListener('scroll', revisar, { passive: true });
+      addEventListener('resize', revisar);
+      revisar();
+    }
+
+    // Menú en pantalla completa para celular
+    const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+    const menu = document.getElementById('menu-movil');
+    if (burger && menu) {
+      const esEn = d.lang?.slice(0, 2) === 'en';
+      const etiquetas = esEn ? ['Open menu', 'Close menu'] : ['Abrir menú', 'Cerrar menú'];
+      const abierto = () => burger.getAttribute('aria-expanded') === 'true';
+      const poner = (abrir: boolean, devolverFoco = true) => {
+        burger.setAttribute('aria-expanded', String(abrir));
+        burger.setAttribute('aria-label', etiquetas[abrir ? 1 : 0]);
+        menu.toggleAttribute('inert', !abrir);
+        menu.classList.toggle('is-abierto', abrir);
+        d.classList.toggle('menu-abierto', abrir);
+        if (abrir) menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true });
+        else if (devolverFoco) burger.focus({ preventScroll: true });
+      };
+      burger.addEventListener('click', () => poner(!abierto()));
+      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => poner(false, false)));
+      addEventListener('keydown', (e) => { if (e.key === 'Escape' && abierto()) poner(false); });
+      // Si la pantalla crece y el menú deja de aplicar, se cierra
+      matchMedia('(min-width: 561px)').addEventListener('change', (m) => { if (m.matches && abierto()) poner(false, false); });
+    }
+  </script>
+</header>

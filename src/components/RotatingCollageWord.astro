@@ -1,0 +1,35 @@
+---
+// Palabra rotativa en collage (botones.md, Parte 1). Recibe cualquier lista de palabras;
+// todo lo visual sale de las reglas en src/lib/collage.js y de hero-collage.tokens.json.
+import tokens from '../data/hero-collage.tokens.json';
+import { asignar, estiloRecorte, claseRecorte, contarRecortes } from '../lib/collage.js';
+
+interface Props {
+  words: string[];
+  primary?: string;
+  cycleMs?: number;
+  seed?: string;
+}
+
+const { words, primary = words[0], cycleMs = tokens.motion.cycleMs, seed = '' } = Astro.props as Props;
+
+// Collage estático de `primary` para cada tema: se ve sin JavaScript y con movimiento reducido
+const estatico = (tema: 'dark' | 'light') => {
+  const items = asignar(primary, tema, tokens, seed);
+  const n = contarRecortes(items);
+  return items.map((x) => (x.hueco ? null : { ch: x.ch, cls: claseRecorte(x), style: estiloRecorte(x, tokens, n) }));
+};
+const variantes = [['dark', estatico('dark')], ['light', estatico('light')]] as const;
+---
+<span class="hc-slot" data-collage data-words={JSON.stringify(words)} data-primary={primary} data-cycle={cycleMs} data-seed={seed}>
+  <span class="hc-sr">{primary}</span>
+  {variantes.map(([tema, items]) => (
+    <span class="hc-word hc-static" data-t={tema} aria-hidden="true">
+      {items.map((x) => (x ? <span class={x.cls} style={x.style}>{x.ch}</span> : <span class="hc-gap" />))}
+    </span>
+  ))}
+</span>
+
+<script>
+  import '../scripts/collage-word.js';
+</script>

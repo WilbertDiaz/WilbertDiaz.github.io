@@ -1,0 +1,166 @@
+---
+// «Mi trabajo» en formato revista: tres pestañas por rol, un «spread» por pestaña
+// y un solo modal de caso. Los datos viven en src/data/casos.ts; aquí solo se compone.
+import type { Copy } from '../data/content';
+import { casos, pestanas, ui, type Locale, type Plate, type Case } from '../data/casos';
+import { validar, publicable } from '../lib/casos.js';
+import RotatingCollageWord from './RotatingCollageWord.astro';
+import Shot from './Shot.astro';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+const locale: Locale = t.toggleHref === '/es' ? 'en' : 'es';
+const u = ui[locale];
+const titulo = { en: { pre: 'My', palabra: 'work', sub: 'My favourite part happens before the code. Here’s how I connect it to everything else.' },
+  es: { pre: 'Mi', palabra: 'trabajo', sub: 'Mi parte favorita ocurre antes del código. Aquí cuento cómo la conecto con todo lo demás.' } }[locale];
+
+// Reglas del modelo: un error rompe el build; una captura pendiente avisa y saca el caso de producción.
+const { errores, avisos } = validar(casos, pestanas);
+if (errores.length) throw new Error(`Casos de «Mi trabajo» inválidos:\n- ${errores.join('\n- ')}`);
+const mostrarPendientes = import.meta.env.DEV || process.env.MOSTRAR_PENDIENTES === '1';
+if (avisos.length && locale === 'es') console.warn(`[mi trabajo] ${avisos.length} captura(s) pendiente(s)${mostrarPendientes ? '' : ': esas láminas no se publican'}:\n- ${avisos.join('\n- ')}`);
+const listo = (c: Case) => (mostrarPendientes ? c : (publicable(c) as Case | null));
+const porSlug = new Map(casos.map((c) => [c.slug, c]));
+// Pestañas con al menos un caso publicable; el orden de «Siguiente caso» sigue el de las pestañas
+const tabs = pestanas
+  .map((t) => ({ ...t, lista: t.casos.map((s) => listo(porSlug.get(s)!)).filter((c): c is Case => !!c) }))
+  .filter((t) => t.lista.length);
+const publicados = tabs.flatMap((t) => t.lista);
+const sig = (i: number) => publicados[(i + 1) % publicados.length];
+const T = (x: Record<Locale, string>) => x[locale];
+const N = (c: Case) => (typeof c.name === 'string' ? c.name : c.name[locale]);
+const dominio = (url: string) => new URL(url).hostname.replace(/^www\./, '');
+const flecha = 'M5 12h13M13 6l6 6-6 6';
+const sizes = {
+  hero: '(min-width: 1280px) 660px, (min-width: 1024px) 50vw, 100vw',
+  full: '(min-width: 1280px) 1150px, 100vw',
+  tel: '(min-width: 768px) 26vw, 72vw',
+  duo: '(min-width: 768px) 46vw, 100vw',
+};
+const tipo = (p: Plate) => p.type;
+---
+<section class="block trabajo" id="work" aria-labelledby="work-h">
+  <header class="mw-head">
+    <h2 class="titulo mw-titulo" id="work-h" data-rev style="--i:1">{titulo.pre}{' '}<RotatingCollageWord words={[titulo.palabra]} primary={titulo.palabra} seed="mi-trabajo" /></h2>
+    <p class="mw-sub" data-rev style="--i:2">{titulo.sub}</p>
+  </header>
+
+  <div class="mt" data-mt>
+    <div class="mt-tabs" role="tablist" aria-label={u.tabs}>
+      {tabs.map((t, i) => (
+        <button type="button" role="tab" class="mt-tab" id={`tab-${t.id}`} data-tab={t.id} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+          <span class="mt-num">{String(i + 1).padStart(2, '0')}</span> {T(t.label)}
+        </button>
+      ))}
+    </div>
+
+    {tabs.map((t, i) => (
+      <div class="mt-panel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} data-tab={t.id} hidden={i !== 0}>
+        {t.lista.length > 1 && (
+          <div class="spread-casos" role="group" aria-label={u.projects} data-rota>
+            {t.lista.map((c, k) => (
+              <button type="button" class="spread-caso" data-elegir={c.slug} aria-pressed={k === 0 ? 'true' : 'false'}>{N(c)}</button>
+            ))}
+          </div>
+        )}
+        {t.lista.map((c, k) => (
+          <div class:list={['spread', { 'spread--movil': c.hero!.device === 'phone' }]} data-spread={c.slug} hidden={k !== 0}>
+            <figure class="spread-fig">
+              <button type="button" class="plate" data-abrir={c.slug} aria-label={u.openCase.replace('{name}', N(c))}>
+                <Shot shot={c.hero!} locale={locale} sizes={c.hero!.device === 'phone' ? '300px' : sizes.hero} eager={i === 0 && k === 0} prioridad={i === 0 && k === 0} />
+                <span class="plate-hint" aria-hidden="true">{u.hint}</span>
+              </button>
+            </figure>
+            <div class="spread-aside">
+              <p class="kicker">{N(c)}</p>
+              <h3 class="spread-h">{T(c.headline)}</h3>
+              <p class="spread-intro">{T(c.intro)}</p>
+              <div class="spread-acciones">
+                <button type="button" class="abrir" data-abrir={c.slug}>
+                  <span>{u.open}</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={flecha} /></svg>
+                </button>
+                {c.url && <a class="sitio" href={c.url} target="_blank" rel="noopener">{dominio(c.url)}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg></a>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <dialog class="cm" id="caso-modal" aria-modal="true">
+    <div class="cm-marco">
+      {publicados.map((c, i) => (
+        <article class="cm-caso" data-caso={c.slug} aria-labelledby={`cm-h-${c.slug}`} hidden>
+          <div class="cm-barra">
+            <p class="kicker">{N(c)}</p>
+            <button type="button" class="cm-cerrar" data-cerrar>
+              <span>{u.close}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+          </div>
+          <div class="cm-contenido">
+            <header class="cm-portada">
+              <h2 class="cm-h" id={`cm-h-${c.slug}`} tabindex="-1">{N(c)}</h2>
+              <p class="cm-lead">{T(c.lead)}</p>
+              {c.url && <a class="sitio cm-sitio" href={c.url} target="_blank" rel="noopener">{dominio(c.url)}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg></a>}
+            </header>
+
+            {c.plates.map((p, k) => (
+              <figure class:list={['cm-lam', `cm-lam--${tipo(p)}`]} data-primera={k === 0 ? '' : undefined} style={p.type === 'full' ? `--ar:${p.shot.width / p.shot.height}` : undefined}>
+                {p.type === 'full' && (
+                  <Fragment>
+                    <Shot shot={p.shot} locale={locale} sizes={sizes.full} />
+                    <figcaption><strong>{T(p.title)}</strong><span>{T(p.why)}</span></figcaption>
+                  </Fragment>
+                )}
+                {p.type === 'phones' && (
+                  <Fragment>
+                    <figcaption><strong>{T(p.title)}</strong><span>{T(p.why)}</span></figcaption>
+                    <div class="cm-tels" data-n={p.items.length}>
+                      {p.items.map((it, n) => (
+                        <div class="cm-tel" style={`--i:${n}`}>
+                          <Shot shot={it.shot} locale={locale} sizes={sizes.tel} />
+                          <span class="cm-tel-label">{T(it.label)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </Fragment>
+                )}
+                {p.type === 'duo' && (
+                  <Fragment>
+                    <div class="cm-duo">
+                      {p.shots.map((sh) => <Shot shot={sh} locale={locale} sizes={sizes.duo} />)}
+                    </div>
+                    <figcaption><strong>{T(p.title)}</strong><span>{T(p.why)}</span></figcaption>
+                  </Fragment>
+                )}
+              </figure>
+            ))}
+
+            <section class="cm-hice" aria-labelledby={`cm-hice-${c.slug}`}>
+              <h3 id={`cm-hice-${c.slug}`}>{u.did}</h3>
+              <ul>{c.hice.map((h) => <li>{T(h)}</li>)}</ul>
+            </section>
+
+            <footer class="cm-sig">
+              <span>{u.next}</span>
+              <button type="button" class="cm-sig-btn" data-ir={sig(i).slug}>
+                <span>{N(sig(i))}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={flecha} /></svg>
+              </button>
+            </footer>
+          </div>
+        </article>
+      ))}
+    </div>
+  </dialog>
+</section>
+
+<script>
+  import '../scripts/trabajo.js';
+</script>

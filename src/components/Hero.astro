@@ -1,0 +1,53 @@
+---
+import type { Copy } from '../data/content';
+import tokens from '../data/hero-collage.tokens.json';
+import RotatingCollageWord from './RotatingCollageWord.astro';
+import TiltButton from './TiltButton.astro';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+
+// Los tokens del collage y del botón pasan al CSS como variables: hero-collage.tokens.json es la única fuente
+const G = tokens.scrapGeometry;
+const M = tokens.motion;
+const B = tokens.tiltButton;
+const vars: Record<string, string> = {};
+for (const [tema, c] of [['dark', 'd'], ['light', 'l']] as const) {
+  for (const [k, v] of Object.entries(tokens.theme[tema])) vars[`hc-${c}-${k}`] = String(v);
+}
+Object.assign(vars, {
+  'hc-pad': G.padding, 'hc-margin': G.margin, 'hc-lh': String(G.lineHeight), 'hc-radius': G.radius, 'hc-round-pad': G.roundPadding,
+  'hc-cycle': `${M.cycleMs}ms`, 'hc-enter-ease': M.enter.easing, 'hc-jit-period': `${M.jitter.periodMs}ms`, 'hc-jit-timing': M.jitter.timing,
+  'hc-slot-dur': `${M.slotWidth.durationMs}ms`, 'hc-slot-ease': M.slotWidth.easing,
+  'hc-persp': `${B.perspectivePx}px`, 'hc-max-x': `${B.maxRotateXDeg}deg`, 'hc-max-y': `${B.maxRotateYDeg}deg`, 'hc-hover-scale': String(B.hoverScale),
+  'hc-cta-transition': B.transition, 'hc-spec-r': `${B.specularRadiusPx}px`,
+  'hc-sh-x': `${B.shadow.xFactorPx}px`, 'hc-sh-y0': `${B.shadow.yBasePx}px`, 'hc-sh-y': `${B.shadow.yFactorPx}px`, 'hc-sh-blur': `${B.shadow.blurPx}px`,
+  'hc-arrow-base': `${B.arrow.baseShiftPx}px`, 'hc-arrow-k': `${B.arrow.factorPx}px`, 'hc-nudge': `${B.idleNudge.periodMs}ms`,
+  'hc-cta-pad': B.padding, 'hc-cta-radius': B.radius, 'hc-cta-size': B.fontSize, 'hc-cta-weight': String(B.fontWeight), 'hc-cta-gap': `${B.gapPx}px`,
+});
+// El renglón de la palabra rotativa lleva solo la palabra y lo que la sigue hasta el primer espacio
+// ("needs", ", convertido"); el resto va en su propia línea. Así cambiar de palabra nunca reacomoda el texto.
+const corte = t.heroPost.match(/^(\s*\S+)\s+(.*)$/);
+const cola = corte ? corte[1] : t.heroPost;
+const resto = corte ? corte[2] : '';
+const pasos = ['0%', '33.33%', '66.66%'];
+const keyframes =
+  `@keyframes hc-entrar{${M.enter.keyframes}}` +
+  `@keyframes hc-temblor{${M.jitter.frames.map((f, i) => `${pasos[i]}{rotate:calc(var(--r) * ${f.rotateFactor});translate:0 ${f.translateY}}`).join('')}}` +
+  `@keyframes hc-empujon{${B.idleNudge.keyframes}}`;
+---
+<section class="hero pantalla" id="inicio" aria-labelledby="hero-h">
+  <div class="hero-main">
+    <h1 class="display hc-h1" id="hero-h" data-hero style="--i:0">
+      <span class="hc-l1">{t.heroPre}</span>{' '}<br class="hc-br" />
+      <span class="hc-l2"><RotatingCollageWord words={t.heroWords} primary={t.heroPrimary} /><span class="hc-cola">{cola}</span></span>{' '}<br class="hc-br" />
+      <span class="hc-l3">{resto}</span>
+    </h1>
+    <div data-hero style="--i:2"><TiltButton href="#contact" label={t.heroCta} /></div>
+  </div>
+</section>
+<Fragment set:html={`<style>:root{${Object.entries(vars).map(([k, v]) => `--${k}:${v}`).join(';')}}${keyframes}</style>`} />
+

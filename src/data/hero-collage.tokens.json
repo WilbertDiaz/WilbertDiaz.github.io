@@ -1,0 +1,101 @@
+{
+  "$description": "Tokens del hero: collage stop-motion + botón con inclinación 3D. Los valores son la fuente de verdad; las reglas de uso están en PROMPT.md.",
+  "fonts": {
+    "display": "Usa la serif display que ya tiene el proyecto para el h1. Referencia del diseño: Fraunces (opsz 144, SOFT 100, WONK 1, wght 600).",
+    "sans": "La sans del proyecto (referencia: Instrument Sans).",
+    "mono": "Space Mono 700 (o la mono del proyecto)."
+  },
+  "theme": {
+    "dark": {
+      "bg": "#0B0A08",
+      "text": "#F6F3EC",
+      "muted": "#A39C90",
+      "accent": "#E6C08F",
+      "ctaBg": "#E6C08F",
+      "ctaFg": "#14110D",
+      "ctaShadowRest": "0 12px 32px rgba(230,192,143,0.16)",
+      "ctaShadowColor": "rgba(230,192,143,0.26)",
+      "ctaSpecularAlpha": 0.45,
+      "scrapShadow": "0 1px 0 rgba(0,0,0,.4), 0 10px 16px -6px rgba(0,0,0,.7)"
+    },
+    "light": {
+      "bg": "#F8F6F1",
+      "text": "#0E0D0B",
+      "muted": "#5E574D",
+      "accent": "#E6C08F",
+      "ctaBg": "#2A2322",
+      "ctaFg": "#F8F6F1",
+      "ctaShadowRest": "0 0 0 10px rgba(14,13,11,0.04), 0 20px 30px -10px rgba(14,13,11,0.35)",
+      "ctaShadowColor": "rgba(14,13,11,0.45)",
+      "ctaSpecularAlpha": 0.16,
+      "scrapShadow": "0 1px 0 rgba(14,13,11,.12), 0 10px 14px -6px rgba(60,40,20,.28)"
+    }
+  },
+  "scrapPapers": {
+    "$note": "Catálogo de papeles por tema. 'kind' define a qué reglas de PROMPT.md obedece cada papel. Cada par fg/bg cumple ≥4.5:1.",
+    "dark": [
+      { "id": "cream",      "kind": "solid",          "bg": "#F6F3EC", "fg": "#0E0D0B" },
+      { "id": "newsprint",  "kind": "solid",          "bg": "#BDB6AA", "fg": "#0E0D0B" },
+      { "id": "paper",      "kind": "solid",          "bg": "#D8D1C4", "fg": "#0E0D0B" },
+      { "id": "kraft",      "kind": "solid",          "bg": "#9C8A72", "fg": "#0E0D0B" },
+      { "id": "charcoal",   "kind": "solid",          "bg": "#2A2622", "fg": "#F6F3EC", "border": "1px solid #4A443B" },
+      { "id": "slate",      "kind": "solid",          "bg": "#3B3630", "fg": "#F6F3EC" },
+      { "id": "umber",      "kind": "solid",          "bg": "#5A5348", "fg": "#F6F3EC" },
+      { "id": "outline",    "kind": "outline",        "bg": "transparent", "fg": "#F6F3EC", "border": "2px solid #F6F3EC" },
+      { "id": "dashed",     "kind": "outline",        "bg": "transparent", "fg": "#F6F3EC", "border": "2px dashed #8C857A" },
+      { "id": "accentInk",  "kind": "accent",         "bg": "#1E1B18", "fg": "#E6C08F", "border": "1px solid #4A443B" }
+    ],
+    "light": [
+      { "id": "white",      "kind": "solid",          "bg": "#FFFFFF", "fg": "#0E0D0B", "border": "1.5px solid #0E0D0B" },
+      { "id": "newsprint",  "kind": "solid",          "bg": "#E7E2D8", "fg": "#0E0D0B" },
+      { "id": "kraft",      "kind": "solid",          "bg": "#D8C7A8", "fg": "#0E0D0B" },
+      { "id": "dustyBlue",  "kind": "solid",          "bg": "#BFCBDA", "fg": "#0E0D0B" },
+      { "id": "blush",      "kind": "solid",          "bg": "#EBC9BF", "fg": "#0E0D0B" },
+      { "id": "sage",       "kind": "solid",          "bg": "#CCD5C0", "fg": "#0E0D0B" },
+      { "id": "outline",    "kind": "outline",        "bg": "transparent", "fg": "#0E0D0B", "border": "2px solid #0E0D0B" },
+      { "id": "dashed",     "kind": "outline",        "bg": "transparent", "fg": "#0E0D0B", "border": "2px dashed #8C8478" },
+      { "id": "accentPaper","kind": "accent",         "bg": "#E6C08F", "fg": "#0E0D0B" }
+    ]
+  },
+  "scrapType": [
+    { "id": "serif-italic-heavy", "family": "display", "weight": 800, "italic": true,  "scale": 1.0 },
+    { "id": "serif-regular",      "family": "display", "weight": 600, "italic": false, "scale": 1.0 },
+    { "id": "serif-light-italic", "family": "display", "weight": 300, "italic": true,  "scale": 1.0 },
+    { "id": "serif-black",        "family": "display", "weight": 900, "italic": false, "scale": 1.0 },
+    { "id": "sans-bold",          "family": "sans",    "weight": 700, "italic": false, "scale": 0.88 },
+    { "id": "sans-italic",        "family": "sans",    "weight": 600, "italic": true,  "scale": 0.9 },
+    { "id": "mono-bold",          "family": "mono",    "weight": 700, "italic": false, "scale": 0.86 }
+  ],
+  "scrapGeometry": {
+    "padding": "0.02em 0.06em 0.07em",
+    "margin": "0 0.012em",
+    "lineHeight": 0.95,
+    "radius": "3px",
+    "roundPadding": "0.02em 0.1em 0.08em",
+    "rotationDeg": { "min": 3, "max": 8 }
+  },
+  "motion": {
+    "cycleMs": 3600,
+    "letterStaggerMs": 40,
+    "maxTotalStaggerMs": 500,
+    "enter": { "easing": "cubic-bezier(.22,1,.36,1)", "keyframes": "0%{scale:.3;opacity:0} 10%{scale:1.06;opacity:1} 16%,86%{scale:1;opacity:1} 100%{scale:.5;opacity:0}" },
+    "jitter": { "periodMs": 1200, "timing": "steps(1,end)", "phaseOffsetMs": 70, "frames": [ { "rotateFactor": 1, "translateY": "0" }, { "rotateFactor": -0.5, "translateY": "-0.02em" }, { "rotateFactor": 0.4, "translateY": "0.015em" } ] },
+    "slotWidth": { "durationMs": 800, "easing": "cubic-bezier(.65,0,.35,1)" }
+  },
+  "tiltButton": {
+    "perspectivePx": 500,
+    "maxRotateXDeg": 8,
+    "maxRotateYDeg": 10,
+    "hoverScale": 1.04,
+    "transition": "transform 0.5s cubic-bezier(.22,1,.36,1), box-shadow 0.5s cubic-bezier(.22,1,.36,1)",
+    "specularRadiusPx": 120,
+    "shadow": { "xFactorPx": -18, "yBasePx": 18, "yFactorPx": -12, "blurPx": 34 },
+    "arrow": { "baseShiftPx": 3, "factorPx": 6 },
+    "idleNudge": { "periodMs": 3200, "distancePx": 5, "keyframes": "0%,72%,100%{translate:0 0} 80%{translate:5px 0} 88%{translate:0 0}" },
+    "padding": "20px 30px",
+    "radius": "7.5px",
+    "fontSize": "18px",
+    "fontWeight": 500,
+    "gapPx": 14
+  }
+}

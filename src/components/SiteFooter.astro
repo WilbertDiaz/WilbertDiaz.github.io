@@ -1,0 +1,12 @@
+---
+import type { Copy } from '../data/content';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+---
+<footer class="site">
+  <div class="wrap">{t.footer}</div>
+</footer>

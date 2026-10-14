@@ -1,0 +1,44 @@
+---
+// Marco de una captura. La proporción la dicta siempre la imagen:
+// ancho al 100 % y alto automático, con width/height reales para no mover el layout.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Shot, Locale } from '../data/casos';
+
+interface Props {
+  shot: Shot;
+  locale: Locale;
+  sizes: string;
+  eager?: boolean;
+  prioridad?: boolean;
+}
+
+const { shot, locale, sizes, eager = false, prioridad = false } = Astro.props as Props;
+const archivos = import.meta.glob<{ default: ImageMetadata }>('../assets/work/*', { eager: true });
+const meta = shot.src ? Object.entries(archivos).find(([ruta]) => ruta.endsWith(`/${shot.src}`))?.[1].default : undefined;
+if (shot.src && !meta) throw new Error(`Shot: no existe src/assets/work/${shot.src}`);
+const anchos = (shot.device === 'phone' ? [320, 480, 648] : shot.device === 'photo' ? [400, 700, 1000, 1400] : [480, 800, 1200, 1600, 2000]).filter((w) => w < shot.width).concat(shot.width); // siempre incluye el tamaño original
+const etiqueta = shot.device === 'phone' ? 'Mobile · 9:19.5' : 'Desktop · 16:10';
+const proporcion = shot.src ? `${shot.width} / ${shot.height}` : shot.device === 'phone' ? '9 / 19.5' : '16 / 10';
+---
+<div class:list={['shot', `shot--${shot.device}`]} style={`--ar:${shot.width / shot.height}`}>
+  <div class="shot-pantalla" style={`aspect-ratio:${proporcion}`}>
+    {meta ? (
+      <Image
+        src={meta}
+        alt={shot.alt[locale]}
+        width={shot.width}
+        height={shot.height}
+        widths={anchos}
+        sizes={sizes}
+        quality={92}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchpriority={prioridad ? 'high' : undefined}
+        draggable="false"
+      />
+    ) : (
+      <span class="shot-falta" role="img" aria-label={shot.alt[locale]}>{etiqueta}</span>
+    )}
+  </div>
+</div>

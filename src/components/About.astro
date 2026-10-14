@@ -1,0 +1,29 @@
+---
+import type { Copy } from '../data/content';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+const cut = ['a', 'b', 'c', 'b'];
+---
+<section class="block pantalla sobre" id="about" aria-labelledby="about-h">
+  <h2 class="titulo" id="about-h" data-rev style="--i:1">{t.aboutTitle}</h2>
+
+  <ul class="notas">
+    {t.notes.map((n, i) => (
+      <li class="nota-lugar" data-tilt data-rev style={`--i:${i + 2}; --n:${i}`}>
+        <div class="nota marco corte" data-corte={cut[i]}>
+          <span class="specular" aria-hidden="true"></span>
+          <h3 class="nota-titulo">{n.title}</h3>
+          <p>{n.text}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  import '../scripts/tilt-button.js';
+</script>

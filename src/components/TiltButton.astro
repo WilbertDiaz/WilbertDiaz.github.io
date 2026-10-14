@@ -1,0 +1,22 @@
+---
+// CTA con inclinación 3D hacia el cursor (botones.md, Parte 2).
+interface Props {
+  href: string;
+  label: string;
+}
+
+const { href, label } = Astro.props as Props;
+---
+<span class="tilt-wrap" data-tilt>
+  <a class="tilt-btn" href={href}>
+    <span class="specular" aria-hidden="true"></span>
+    <span class="tilt-label">{label}</span>
+    <span class="arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+    </span>
+  </a>
+</span>
+
+<script>
+  import '../scripts/tilt-button.js';
+</script>

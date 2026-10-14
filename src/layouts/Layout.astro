@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: string;
+}
+
+const { title, description, lang } = Astro.props as Props;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0A0908" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="preload" href="/fonts/young-serif-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      (function(){var d=document.documentElement;d.classList.add('js');
+      var t=localStorage.getItem('tema');d.dataset.tema=(t==='claro'||t==='oscuro')?t:'oscuro';})();
+    </script>
+  </head>
+  <body class="fondo">
+    <a class="skip-link" href="#main">{lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+    <slot />
+    <script>
+      import '../scripts/motion.js';
+      import '../scripts/scroll-suave.js';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Trabajo from '../components/Trabajo.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { copy } from '../data/content';
+
+const t = copy.en;
+---
+<Layout
+  lang="en"
+  title="Wilbert Díaz — Software Engineer"
+  description="Portfolio of Wilbert Díaz, software engineer: from requirement to production, with useful UX, product leadership and agentic processes. Laravel, Vue, Postgres."
+>
+  <SiteHeader t={t} />
+  <main id="main" class="wrap">
+    <span id="top"></span>
+    <div class="parada"><Hero t={t} /></div>
+
+    <div class="parada"><About t={t} /></div>
+    <Trabajo t={t} />
+    <div class="parada"><Skills t={t} /></div>
+
+    <Contact t={t} />
+  </main>
+  <SiteFooter t={t} />
+</Layout>

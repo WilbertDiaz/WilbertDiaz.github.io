@@ -1,0 +1,84 @@
+/* Hero: palabra rotativa en collage + botón con inclinación 3D (botones.md).
+   Los valores vienen de src/data/hero-collage.tokens.json como variables (Hero.astro, define:vars);
+   aquí solo se asignan por tema y se aplican. */
+
+:root {
+  --hc-bg: var(--hc-d-bg); --hc-accent: var(--hc-d-accent);
+  --hc-ctaBg: var(--hc-d-ctaBg); --hc-ctaFg: var(--hc-d-ctaFg);
+  --hc-ctaShadowRest: var(--hc-d-ctaShadowRest); --hc-ctaShadowColor: var(--hc-d-ctaShadowColor);
+  --hc-ctaSpecularAlpha: var(--hc-d-ctaSpecularAlpha); --hc-scrapShadow: var(--hc-d-scrapShadow);
+  --hc-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+[data-tema="claro"] {
+  --hc-bg: var(--hc-l-bg); --hc-accent: var(--hc-l-accent);
+  --hc-ctaBg: var(--hc-l-ctaBg); --hc-ctaFg: var(--hc-l-ctaFg);
+  --hc-ctaShadowRest: var(--hc-l-ctaShadowRest); --hc-ctaShadowColor: var(--hc-l-ctaShadowColor);
+  --hc-ctaSpecularAlpha: var(--hc-l-ctaSpecularAlpha); --hc-scrapShadow: var(--hc-l-scrapShadow);
+}
+
+/* ───── Palabra rotativa ───── */
+.hero h1.hc-h1 { position: relative; font-size: clamp(40px, 6.6vw, 84px); max-width: none; }
+/* Renglón de la palabra: nunca se parte; si la palabra más larga y su cola no caben, la cola va siempre abajo */
+.hc-l2 { white-space: nowrap; }
+.hc-h1.hc-partido .hc-cola { display: block; }
+.hc-slot { position: relative; display: inline-flex; justify-content: center; align-items: center; height: 1.15em; max-width: 100%; white-space: nowrap; vertical-align: middle; /* middle: el hueco no mueve la línea base al cambiar de palabra */ transition: width var(--hc-slot-dur) var(--hc-slot-ease); }
+.hc-word { display: inline-flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; white-space: nowrap; }
+.hc-scrap {
+  display: inline-block; padding: var(--hc-pad); margin: var(--hc-margin); line-height: var(--hc-lh);
+  border-radius: var(--hc-radius); box-shadow: var(--hc-scrapShadow); rotate: var(--r); letter-spacing: 0; font-synthesis: weight style;
+}
+.hc-scrap.hc-outline { box-shadow: none; }
+.hc-scrap.hc-round { border-radius: 50%; padding: var(--hc-round-pad); }
+.hc-gap { display: inline-block; width: 0.28em; }
+.hc-animado .hc-scrap {
+  animation:
+    hc-entrar var(--hc-cycle) var(--hc-enter-ease) var(--d-in) 1 both,
+    hc-temblor var(--hc-jit-period) var(--hc-jit-timing) var(--d-jit) infinite;
+}
+.hc-medidor { position: absolute; left: 0; top: 0; display: inline-flex; white-space: nowrap; visibility: hidden; pointer-events: none; }
+.hc-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Sin JavaScript: el collage estático del tema activo */
+:root:not([data-tema="claro"]) .hc-static[data-t="light"], [data-tema="claro"] .hc-static[data-t="dark"] { display: none; }
+
+/* ───── Botón con inclinación ───── */
+.tilt-wrap { --x: 0.5; --y: 0.5; --dx: 0; --dy: 0; --on: 0; position: relative; display: inline-block; }
+.tilt-btn {
+  position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; gap: var(--hc-cta-gap);
+  padding: var(--hc-cta-pad); border-radius: var(--hc-cta-radius);
+  font: var(--hc-cta-weight) var(--hc-cta-size) / 1.1 var(--f-texto); text-decoration: none;
+  background: var(--hc-ctaBg); color: var(--hc-ctaFg); box-shadow: var(--hc-ctaShadowRest);
+  transition: var(--hc-cta-transition), translate 0.2s var(--ease-estado);
+}
+.tilt-btn .specular {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: var(--on); transition: opacity 0.35s;
+  background: radial-gradient(var(--hc-spec-r) circle at calc(var(--x) * 100%) calc(var(--y) * 100%), rgb(255 255 255 / var(--hc-ctaSpecularAlpha)), transparent 70%);
+}
+.tilt-label, .tilt-btn .arrow { position: relative; z-index: 1; }
+.tilt-btn .arrow { display: inline-flex; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); animation: hc-empujon var(--hc-nudge) ease-in-out infinite; }
+.tilt-btn .arrow svg { width: 20px; height: 20px; }
+@media (hover: hover) and (pointer: fine) {
+  .tilt-wrap.is-on .tilt-btn {
+    transform: perspective(var(--hc-persp)) rotateX(calc(var(--dy) * -2 * var(--hc-max-x))) rotateY(calc(var(--dx) * 2 * var(--hc-max-y))) scale(var(--hc-hover-scale));
+    box-shadow: calc(var(--dx) * var(--hc-sh-x)) calc(var(--hc-sh-y0) + var(--dy) * var(--hc-sh-y)) var(--hc-sh-blur) var(--hc-ctaShadowColor);
+  }
+  /* Claro: conserva el anillo de reposo y la sombra lleva spread −10px */
+  [data-tema="claro"] .tilt-wrap.is-on .tilt-btn {
+    box-shadow: 0 0 0 10px rgba(14, 13, 11, 0.04), calc(var(--dx) * var(--hc-sh-x)) calc(var(--hc-sh-y0) + var(--dy) * var(--hc-sh-y)) var(--hc-sh-blur) -10px var(--hc-ctaShadowColor);
+  }
+  .tilt-wrap.is-on .tilt-btn .arrow { transform: translateX(calc(var(--hc-arrow-base) + var(--dx) * var(--hc-arrow-k))); animation-play-state: paused; }
+}
+@media (hover: none), (pointer: coarse) {
+  .tilt-btn:active { scale: 0.98; }
+}
+.tilt-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; translate: 0 -2px; }
+:root:not([data-tema="claro"]) .tilt-btn:focus-visible { outline-color: var(--hc-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-slot { transition: none; }
+  .tilt-wrap.is-on .tilt-btn, .tilt-wrap.is-on .tilt-btn .arrow { transform: none; }
+  .tilt-btn .arrow { animation: none; }
+}
+
+/* Palabra única (títulos de sección): sin entrada ni rotación de palabras, solo el temblor */
+.hc-quieto .hc-scrap { animation: hc-temblor var(--hc-jit-period) var(--hc-jit-timing) var(--d-jit) infinite; }
+@media (prefers-reduced-motion: reduce) { .hc-quieto .hc-scrap { animation: none; } }

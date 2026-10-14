@@ -1,0 +1,9 @@
+# Dependencias y builds
+node_modules/
+dist/
+.astro/
+
+# Documentos internos (CV con datos personales, reportes de proyectos, prompts): se quedan en local
+docs/
+
+.DS_Store

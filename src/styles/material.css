@@ -1,0 +1,119 @@
+/* Talla y superficie — materiales. Requiere tokens.css.
+   Un material por tema, mismas clases:
+   · OSCURO (por defecto) = JÍCARA. Todo es grabado: filetes dobles, greca, rayado, marca. Sin grano ni cortes.
+   · CLARO ([data-tema="claro"]) = DULCE. Todo es bloque: superficie con hebras, corte a mano, pila. Sin grabado.
+   El marcado no cambia entre temas; cambia el material. */
+
+/* ═════════ BASE: JÍCARA (oscuro) ═════════ */
+
+.fondo { background-color: var(--c-fondo); }
+
+/* Pieza de identidad: marca en oscuro, pila de dulce en claro */
+
+/* Superficie en oscuro = franja de la jícara: sin relleno, abierta por un filete doble tallado */
+
+.corte { clip-path: none; }
+
+/* Marco de captura: doble filete grabado alrededor, como las bandas del globo */
+.marco {
+  padding: clamp(8px, 1.2vw, 14px);
+  box-shadow: inset 0 0 0 1px var(--c-talla-surco), 0 0 0 4px var(--c-fondo), 0 0 0 5px var(--c-filete);
+}
+.marco > img, .marco > picture, .marco > video {
+  display: block; width: 100%; height: auto;
+  box-shadow: var(--e-captura);
+  outline: 1px solid var(--c-captura-borde, rgb(250 248 244 / 0.06)); outline-offset: -1px;
+}
+
+/* Piezas grabadas: background-color + mask, el color siempre sale de un token */
+
+/* Divisor de sección: banda corta + filete */
+
+/* Etiqueta en letra de bloque */
+.etiqueta {
+  font: 600 var(--t-etiqueta) / 1.2 var(--f-texto);
+  letter-spacing: var(--tr-etiqueta); text-transform: uppercase;
+  color: var(--c-talla);
+}
+
+/* Capas de producto */
+
+/* ═════════ CLARO: DULCE ═════════ */
+
+/* Corte a mano: desvíos de 0.2–0.8 %. Tres variantes. */
+[data-tema="claro"] .corte { clip-path: polygon(0.4% 0.7%, 36% 0, 68% 0.5%, 100% 0, 99.6% 46%, 100% 99.4%, 63% 100%, 27% 99.5%, 0 100%, 0.3% 54%); }
+[data-tema="claro"] .corte[data-corte="b"] { clip-path: polygon(0 0.3%, 41% 0.6%, 77% 0, 99.5% 0.5%, 100% 52%, 99.7% 100%, 58% 99.4%, 19% 100%, 0.5% 99.6%, 0 43%); }
+[data-tema="claro"] .corte[data-corte="c"] { clip-path: polygon(0.6% 0, 29% 0.4%, 62% 0, 100% 0.6%, 99.4% 38%, 100% 100%, 71% 99.5%, 33% 100%, 0 99.3%, 0.5% 61%); }
+
+/* Pila: bloques que se montan unos sobre otros */
+
+/* Marco: la captura se asienta en un bloque */
+[data-tema="claro"] .marco {
+  padding: clamp(10px, 1.6vw, 20px); box-shadow: none;
+  background-color: var(--c-superficie-baja); background-image: var(--m-dulce); background-size: 240px;
+}
+
+/* Divisor y greca en claro = tira de dulce cortada a cuchillo */
+
+/* Decisión en claro: un bloque pequeño de dulce tostado en lugar del rayado */
+
+/* Pieza del hero en claro: tres bloques de dulce apilados */
+
+/* ═════════ BOTONES ═════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  min-height: 48px; padding: 0 var(--s-5);
+  font: 600 var(--t-chico) / 1 var(--f-texto); letter-spacing: 0.02em;
+  text-decoration: none; border-radius: var(--r-1); cursor: pointer;
+  position: relative; overflow: hidden; isolation: isolate;
+  transition: background-color var(--d-micro) var(--ease-estado), color var(--d-micro) var(--ease-estado), border-color var(--d-micro) var(--ease-estado);
+}
+.btn--primario { background: var(--c-accion); color: var(--c-accion-texto); border: 1px solid var(--c-accion); }
+.btn--primario:hover { background: var(--c-accion-hover); border-color: var(--c-accion-hover); }
+.btn--ghost { background: transparent; color: var(--c-titulo); border: var(--b-control); }
+.btn--ghost::before { /* oscuro: el rayado se talla de izquierda a derecha */
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-color: var(--c-talla-surco); opacity: .55;
+  -webkit-mask: var(--m-rayado) repeat 0 0 / 8px; mask: var(--m-rayado) repeat 0 0 / 8px;
+  transform: scaleX(0); transform-origin: left; transition: transform var(--d-corto) var(--ease-talla);
+}
+[data-tema="claro"] .btn--ghost::before { /* claro: se asienta un bloque de dulce */
+  -webkit-mask: none; mask: none; opacity: 1;
+  background-color: var(--c-superficie-alta); background-image: var(--m-dulce); background-size: 240px;
+}
+.btn--ghost:hover { border-color: var(--c-accion); }
+.btn--ghost:hover::before { transform: scaleX(1); }
+
+/* ═════════ SELECTOR DE TEMA ═════════ */
+/* Un botón, dos iconos: en oscuro muestra el sol (ir a claro), en claro la luna (ir a oscuro). */
+.tema-btn {
+  width: 44px; height: 44px; display: inline-grid; place-items: center; padding: 0;
+  background: transparent; color: var(--c-texto-suave); cursor: pointer;
+  border: 1px solid var(--c-filete); border-radius: var(--r-pill);
+  transition: color var(--d-micro) var(--ease-estado), border-color var(--d-micro) var(--ease-estado);
+}
+.tema-btn:hover { color: var(--c-titulo); border-color: var(--c-talla); }
+.tema-btn svg { width: 18px; height: 18px; grid-area: 1 / 1; transition: opacity var(--d-corto) var(--ease-estado), transform var(--d-medio) var(--ease-talla); }
+
+/* ═════════ ENLACES Y FOCO ═════════ */
+.enlace {
+  color: var(--c-titulo); text-decoration: none;
+  background: linear-gradient(var(--c-talla), var(--c-talla)) 0 100% / 100% 1px no-repeat;
+  padding-block: 2px; transition: color var(--d-micro) var(--ease-estado);
+}
+.enlace:hover { color: var(--c-accion); background-image: linear-gradient(var(--c-accion), var(--c-accion)); }
+[data-tema="claro"] .enlace:hover { color: var(--c-talla); background-image: linear-gradient(var(--c-talla), var(--c-talla)); }
+:where(a, button, [tabindex], input, select, textarea, summary):focus-visible {
+  outline: none; box-shadow: var(--foco-anillo); border-radius: var(--r-1);
+}
+
+/* ═════════ TIPOGRAFÍA ═════════ */
+.display { font: 400 var(--t-h1) / var(--lh-display) var(--f-display); letter-spacing: var(--tr-display); color: var(--c-titulo); text-wrap: balance; }
+.titulo { font: 400 var(--t-h2) / var(--lh-titulo) var(--f-display); letter-spacing: var(--tr-display); color: var(--c-titulo); text-wrap: balance; }
+.lead { font: 400 var(--t-lead) / 1.5 var(--f-texto); color: var(--c-texto); max-width: var(--medida); text-wrap: pretty; }
+.texto { font: 400 var(--t-base) / var(--lh-texto) var(--f-texto); color: var(--c-texto); max-width: var(--medida); text-wrap: pretty; }
+
+@media (forced-colors: active) {
+   .btn--ghost::before { background-color: CanvasText; forced-color-adjust: none; opacity: .4; }
+  .corte, [data-tema="claro"] .corte { clip-path: none; }
+}

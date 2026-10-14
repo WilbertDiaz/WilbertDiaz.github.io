@@ -1,0 +1,32 @@
+/* Talla y superficie — movimiento. Requiere tokens.css y src/scripts/motion.js (≈1 KB).
+   Solo transform y opacity. Estado inicial oculto SOLO si hay JS (html.js) y no hay reduced-motion. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Revelar genérico: un bloque se asienta (sube poco y aparece) */
+  html.js [data-rev] { opacity: 0; transform: translateY(var(--mov-desplazo)); }
+  html.js [data-rev].is-in {
+    opacity: 1; transform: none;
+    transition: opacity var(--d-medio) var(--ease-salida), transform var(--d-medio) var(--ease-salida);
+    transition-delay: calc(var(--i, 0) * var(--d-escalon));
+  }
+
+  /* Hero: carga inicial (no espera a IntersectionObserver) */
+  html.js [data-hero] { opacity: 0; transform: translateY(var(--mov-desplazo)); animation: hero-asentar var(--d-largo) var(--ease-salida) forwards; animation-delay: calc(120ms + var(--i, 0) * 110ms); }
+  html.js [data-hero="marca"] { transform: none; animation-name: hero-marca; animation-duration: 1200ms; }
+  @keyframes hero-asentar { to { opacity: 1; transform: none; } }
+  @keyframes hero-marca { to { opacity: 1; } }
+}
+
+/* Encabezado fijo: al pasar 24px de scroll gana superficie y filete tallado */
+.encabezado { position: sticky; top: 0; z-index: 20; isolation: isolate; }
+.encabezado::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--c-fondo-2); opacity: 0; transition: opacity var(--d-corto) var(--ease-estado); }
+.encabezado::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--c-filete); transform: scaleX(0); transform-origin: left; transition: transform var(--d-medio) var(--ease-talla); }
+.encabezado.is-scrolled::before { opacity: 1; }
+.encabezado.is-scrolled::after { transform: scaleX(1); }
+
+/* Cambio de idioma: el subrayado se desliza entre ES y EN (translateX) */
+.idioma { position: relative; display: inline-grid; grid-auto-flow: column; }
+.idioma > a { min-width: 44px; min-height: 44px; display: grid; place-items: center; color: var(--c-texto-suave); text-decoration: none; font: 600 var(--t-etiqueta)/1 var(--f-texto); letter-spacing: var(--tr-etiqueta); }
+.idioma > a[aria-current="true"] { color: var(--c-titulo); }
+.idioma::after { content: ""; position: absolute; bottom: 8px; left: 0; width: 44px; height: 1px; background: var(--c-accion); transform: translateX(calc(var(--idioma-i, 0) * 44px)); transition: transform var(--d-corto) var(--ease-talla); }
+.idioma[data-activo="es"] { --idioma-i: 1; }

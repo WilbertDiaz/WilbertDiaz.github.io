@@ -1,0 +1,16 @@
+---
+import type { Copy } from '../data/content';
+
+interface Props {
+  t: Copy;
+}
+
+const { t } = Astro.props as Props;
+---
+<section class="block contacto" id="contact" aria-labelledby="ct-h">
+  <h2 class="titulo" id="ct-h" data-rev>{t.contactTitle}</h2>
+  <div class="cta-row" data-rev style="--i:1">
+    <a class="btn btn--primario" href="mailto:wiloxel31@gmail.com">wiloxel31@gmail.com</a>
+    <a class="btn btn--ghost" href="https://github.com/WilbertDiaz" target="_blank" rel="noopener">GitHub · WilbertDiaz</a>
+  </div>
+</section>
