@@ -10,14 +10,9 @@ const { t } = Astro.props as Props;
 <section class="block pantalla skills" id="skills" aria-labelledby="skills-h">
   <h2 class="titulo" id="skills-h" data-rev style="--i:1">{t.skillsTitle}</h2>
 
-  <div class="sk-grupos" role="tablist" aria-label={t.skillsTitle}>
-    {t.skillGroups.map((g, i) => (
-      <button type="button" role="tab" class="sk-tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-g={i}>{g.name}</button>
-    ))}
-  </div>
 
   <div class="sk-envoltura" data-rev style="--i:2">
-    <table class="sk-tabla" data-skills data-grupo="0">
+    <table class="sk-tabla">
       <tbody>
         {t.skillGroups.map((g, gi) =>
           g.rows.map((r, ri) => (
@@ -37,15 +32,3 @@ const { t } = Astro.props as Props;
   </div>
 </section>
 
-<script>
-  // En móvil se muestra un grupo a la vez; en escritorio la tabla completa.
-  const tabla = document.querySelector<HTMLElement>('[data-skills]');
-  if (tabla) {
-    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.sk-tab')];
-    const elegir = (i: number) => {
-      tabla.dataset.grupo = String(i);
-      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
-    };
-    tabs.forEach((t, i) => t.addEventListener('click', () => elegir(i)));
-  }
-</script>

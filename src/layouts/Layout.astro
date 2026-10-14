@@ -23,7 +23,7 @@ const { title, description, lang } = Astro.props as Props;
     <link rel="preload" href="/fonts/young-serif-latin.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline>
       (function(){var d=document.documentElement;d.classList.add('js');
-      var t=localStorage.getItem('tema');d.dataset.tema=(t==='claro'||t==='oscuro')?t:'oscuro';})();
+      var t=sessionStorage.getItem('tema');d.dataset.tema=(t==='claro'||t==='oscuro')?t:'oscuro';})();
     </script>
   </head>
   <body class="fondo">

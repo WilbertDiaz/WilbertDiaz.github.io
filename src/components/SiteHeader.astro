@@ -48,7 +48,7 @@ const active = t.toggleHref === '/es' ? 'en' : 'es';
     const b=document.querySelector('[data-tema-toggle]'),d=document.documentElement;
     const L={es:['Cambiar a modo claro','Cambiar a modo oscuro'],en:['Switch to light mode','Switch to dark mode']}[d.lang?.slice(0,2)==='en'?'en':'es'];
     const sync=()=>b.setAttribute('aria-label',d.dataset.tema==='claro'?L[1]:L[0]);
-    b.addEventListener('click',()=>{d.dataset.tema=d.dataset.tema==='claro'?'oscuro':'claro';localStorage.setItem('tema',d.dataset.tema);sync();});
+    b.addEventListener('click',()=>{d.dataset.tema=d.dataset.tema==='claro'?'oscuro':'claro';sessionStorage.setItem('tema',d.dataset.tema);sync();});
     sync();
     // El nombre aparece solo después de pasar la primera sección
     const hero = document.querySelector('.hero');

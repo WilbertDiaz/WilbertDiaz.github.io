@@ -21,7 +21,9 @@
 /* Renglón de la palabra: nunca se parte; si la palabra más larga y su cola no caben, la cola va siempre abajo */
 .hc-l2 { white-space: nowrap; }
 .hc-h1.hc-partido .hc-cola { display: block; }
-.hc-slot { position: relative; display: inline-flex; justify-content: center; align-items: center; height: 1.15em; max-width: 100%; white-space: nowrap; vertical-align: middle; /* middle: el hueco no mueve la línea base al cambiar de palabra */ transition: width var(--hc-slot-dur) var(--hc-slot-ease); }
+/* Con la cola en bloque, el salto que sigue dejaría un renglón vacío */
+.hc-h1.hc-partido .hc-l2 + .hc-br { display: none; }
+.hc-slot { position: relative; display: inline-flex; justify-content: center; align-items: center; height: 1.15em; max-width: 100%; white-space: nowrap; vertical-align: middle; margin-block: -0.06em; /* el hueco (1.15em) no agranda su renglón */ /* middle: el hueco no mueve la línea base al cambiar de palabra */ transition: width var(--hc-slot-dur) var(--hc-slot-ease); }
 .hc-word { display: inline-flex; flex-wrap: nowrap; justify-content: center; align-items: baseline; white-space: nowrap; }
 .hc-scrap {
   display: inline-block; padding: var(--hc-pad); margin: var(--hc-margin); line-height: var(--hc-lh);
