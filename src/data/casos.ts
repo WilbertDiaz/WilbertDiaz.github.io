@@ -129,8 +129,8 @@ export const casos: Case[] = [
     slug: 'cunduamap',
     name: 'CunduaMap',
     url: 'https://cunduamap.com',
-    headline: { en: 'UX for a festival crowd.', es: 'UX para la multitud de un festival.' },
-    intro: { en: 'Visitors use it for a few days, standing in the sun: nothing to type, nothing to learn and a map that only shows the town.', es: 'Los turistas la usan unos días, de pie y bajo el sol: nada que escribir, nada que aprender y un mapa que solo muestra el pueblo.' },
+    headline: { en: 'One map for visitors and businesses.', es: 'Un mapa para turistas y negocios.' },
+    intro: { en: 'Two stakeholders with different needs: visitors want to explore without getting lost, businesses want to be found. Each one gets its own experience.', es: 'Dos interesados con necesidades distintas: el turista quiere descubrir sin perderse y el negocio quiere que lo encuentren. Cada uno tiene su propia experiencia.' },
     hero: tel('cundua-lugar.webp', { en: 'Place card for the Parroquia La Natividad de María, already in the route', es: 'Ficha de la Parroquia La Natividad de María, ya en la ruta' }),
     lead: {
       en: 'Hurried visitors, sun on the screen, a town they don’t know: nothing to type and a map that won’t let you get lost.',
@@ -153,11 +153,20 @@ export const casos: Case[] = [
           { label: { en: 'Festival schedule', es: 'Programa del festival' }, shot: tel('cundua-programa.webp', { en: 'Festival schedule by time', es: 'Programa del festival por horario' }) },
         ],
       },
+      {
+        type: 'phones',
+        title: { en: 'The business side', es: 'El lado del negocio' }, why: { en: 'Many owners aren’t technical: they sign up on their own in four steps that save progress, and each request is checked by phone before it goes live.', es: 'Muchos negocios no son técnicos: se registran solos en cuatro pasos que guardan el avance, y cada solicitud se valida por teléfono antes de publicarse.' },
+        items: [
+          { label: { en: 'Register your business', es: 'Registra tu negocio' }, shot: tel('cundua-negocio-inicio.webp', { en: 'Business area with the option to register a business', es: 'Área de negocios con la opción de registrar un negocio' }, 1146) },
+          { label: { en: 'Step 1 of 4', es: 'Paso 1 de 4' }, shot: tel('cundua-negocio-registro.webp', { en: 'First registration step: contact name and phone', es: 'Primer paso del registro: nombre y teléfono de contacto' }, 1146) },
+        ],
+      },
     ],
     hice: [
-      { en: "Designed and built the web app for a barbecue festival in a town in southeastern Mexico, in about two weeks.", es: "Diseñé y construí la app web de un festival de la barbacoa en un municipio del sureste mexicano, en unas dos semanas." },
+      { en: "Designed and built the web app for a barbecue festival in a town in southeastern Mexico, for two stakeholders: visitors and businesses.", es: "Diseñé y construí la app web de un festival de la barbacoa en un municipio del sureste mexicano para dos interesados: turistas y negocios." },
       { en: "Balanced visitors and vendors: no paid placement, honest results.", es: "Equilibré a turistas y locatarios: sin posicionamiento pagado, resultados honestos." },
       { en: "Vendors drop a pin on the map instead of typing an address.", es: "El locatario pone su pin en el mapa en lugar de escribir la dirección." },
+      { en: "What a business publishes goes through moderation and schema validation before it reaches the visitor’s map.", es: "Lo que publica un negocio pasa por moderación y validación de esquema antes de llegar al mapa del turista." },
       { en: "Visitors read from a CDN, so the server is never in their way.", es: "El turista lee desde una CDN: el servidor nunca está en su camino." },
       { en: "No tracking cookies and no stored location.", es: "Sin cookies de rastreo y sin guardar la ubicación." },
       { en: "40 businesses published; Vue 3, MapLibre GL and Laravel.", es: "40 negocios publicados; Vue 3, MapLibre GL y Laravel." },
