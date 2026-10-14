@@ -1,22 +1,22 @@
-# Portafolio · Wilbert Díaz
+# Mi portafolio
 
-Sitio bilingüe (inglés en `/`, español en `/es`) hecho con [Astro](https://astro.build), sin frameworks de UI ni dependencias de animación.
+Este es el código de mi portafolio, que puedes ver en [wilbertdiaz.github.io](https://wilbertdiaz.github.io). Ahí cuento quién soy, en qué proyectos he trabajado y cómo trabajo, en inglés y en español.
 
-## Desarrollo
+Lo hice con Astro y CSS escrito a mano. No usé librerías de animación: el collage del título, las pestañas y la galería de proyectos los programé yo.
+
+## Para correrlo
 
 ```bash
 npm install
-npm run dev      # servidor local
-npm test         # pruebas (node --test): collage del hero y datos de «Mi trabajo»
-npm run build    # sitio estático en dist/
+npm run dev
 ```
 
-## Estructura
+`npm test` revisa que los datos de los proyectos estén completos y que las medidas de cada imagen coincidan con el archivo. `npm run build` deja el sitio listo en `dist/`.
 
-- `src/data/content.ts`: textos del sitio en ambos idiomas.
-- `src/data/casos.ts`: casos de «Mi trabajo» (pestañas, láminas, capturas). Las imágenes viven en `src/assets/work/`; las medidas de cada una se validan contra el archivo en las pruebas.
-- `src/components/`, `src/scripts/`, `src/styles/`: componentes, comportamiento y estilos (tokens en `tokens.css`, temas claro y oscuro).
+## Dónde está cada cosa
 
-## Publicación
+- Los textos del sitio están en `src/data/content.ts`.
+- Los proyectos de «Mi trabajo» están en `src/data/casos.ts`, y sus imágenes en `src/assets/work/`.
+- Lo demás (componentes, scripts y estilos) está en `src/`.
 
-Cada push a `main` corre las pruebas, construye y publica en GitHub Pages (`.github/workflows/deploy.yml`).
+Cada vez que subo cambios a `main`, GitHub corre las pruebas y publica el sitio solo.
