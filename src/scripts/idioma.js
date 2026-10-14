@@ -2,7 +2,7 @@
 // y la pestaña abierta de «Mi trabajo» (en la URL); la otra página lo restaura al cargar.
 const CLAVE = 'pos-idioma';
 const secciones = () => [...document.querySelectorAll('main section[id]')];
-const inicio = (el) => (el.closest('.parada') ?? el).getBoundingClientRect().top + scrollY;
+const inicio = (el) => el.getBoundingClientRect().top + scrollY;
 
 document.querySelectorAll('.idioma a[lang], .menu-movil a[lang]').forEach((a) => {
   a.addEventListener('click', () => {

@@ -231,10 +231,6 @@ html.js .encabezado.con-nombre .brand { opacity: 1; translate: 0 0; filter: none
 /* El encabezado no ocupa flujo; cada sección mide exactamente una pantalla y reserva el alto del encabezado */
 .encabezado { position: fixed; top: 0; left: 0; right: 0; }
 .pantalla { height: 100vh; min-height: 0; box-sizing: border-box; border-top: var(--h-enc) solid transparent; scroll-snap-align: none; scroll-margin-top: 0; }
-/* Parada: al llegar al final de la sección, esta se queda fija un tramo de scroll antes de dar paso a la siguiente */
-.parada { --parada: 50vh; position: relative; height: calc(100vh + var(--parada)); }
-.parada > .pantalla { position: sticky; top: 0; }
-@media (prefers-reduced-motion: reduce) { .parada { --parada: 0px; } }
 
 /* Interruptor de tema: un solo icono dividido; la mitad del tema activo queda encendida */
 .tema-btn .ico-tema { width: 20px; height: 20px; transition: rotate var(--d-medio) var(--ease-talla); }
@@ -436,7 +432,7 @@ dialog.cm.is-cerrando .cm-marco { transition-duration: 400ms; }
 .spread-caso:hover { color: var(--c-titulo); }
 .spread-caso[aria-pressed="true"] { color: var(--c-titulo); border-bottom-color: var(--c-titulo); }
 .spread-caso:focus-visible { outline: 2px solid var(--c-foco); outline-offset: 4px; }
-.spread-casos + .spread { margin-top: 32px; }
+.spread-casos ~ .spread { margin-top: 32px; }
 .spread[hidden] { display: none; }
 .spread.entra { animation: spread-entra 800ms var(--ease-revista) both; }
 
@@ -456,7 +452,7 @@ dialog.cm.is-cerrando .cm-marco { transition-duration: 400ms; }
 }
 @media (max-width: 767px) {
   .spread-casos { gap: 22px; margin-top: 20px; }
-  .spread-casos + .spread { margin-top: 20px; }
+  .spread-casos ~ .spread { margin-top: 20px; }
   .spread-intro { font-size: 15px; }
   .spread--movil .plate { width: min(200px, 62%); }
 }
@@ -521,10 +517,10 @@ dialog.cm.is-cerrando .cm-marco { transition-duration: 400ms; }
 /* Selector de proyectos más pegado: la imagen no baja fuera de la sección */
 .spread-casos { margin-top: 12px; }
 .spread-caso { min-height: 40px; }
-.spread-casos + .spread { margin-top: 12px; }
+.spread-casos ~ .spread { margin-top: 12px; }
 @media (max-width: 767px) {
   .spread-casos { margin-top: 10px; }
-  .spread-casos + .spread { margin-top: 10px; }
+  .spread-casos ~ .spread { margin-top: 10px; }
 }
 
 /* Lámina «duo»: dos capturas de escritorio lado a lado */
@@ -548,3 +544,6 @@ dialog.cm.is-cerrando .cm-marco { transition-duration: 400ms; }
   .cm-hice li { font-size: 15px; }
   .cm-hice + .cm-sig { margin-top: 56px; }
 }
+
+/* La imagen del spread va arriba, bajo las pestañas, aunque el texto de al lado sea más alto (sección de IA) */
+.spread-fig { align-self: start; }

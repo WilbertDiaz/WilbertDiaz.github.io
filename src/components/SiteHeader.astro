@@ -62,7 +62,7 @@ const active = t.toggleHref === '/es' ? 'en' : 'es';
         for (const a of enlaces) {
           const el = document.querySelector(a.hash);
           if (!el) continue;
-          const caja = (el.closest('.parada') ?? el).getBoundingClientRect();
+          const caja = el.getBoundingClientRect();
           if (caja.top <= linea && caja.bottom > linea) activo = a;
         }
         // Al final de la página manda el último enlace (Contacto), que ya no ocupa una pantalla entera
